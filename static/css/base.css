@@ -1,0 +1,6 @@
+body{
+    background-image: url("http://localhost:8000/static/img/t01c3d3eb0a2bc55e79.jpg");
+    background-repeat:repeat-x;
+    background-attachment:fixed;
+    background-position:bottom;
+  }

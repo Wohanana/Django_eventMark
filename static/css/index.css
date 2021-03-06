@@ -1,0 +1,18 @@
+.content{
+    font-size:60px;
+    position:absolute;
+    left:800px;
+    top:230px;
+}
+.group{
+    font-size:25px;
+    position:absolute;
+    left:850px;
+    top:400px;
+}
+.class{
+    font-size:25px;
+    position:absolute;
+    left:850px;
+    top:500px;
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}用户界面{% endblock %}
+{% block head %}<li><a href="#" data-toggle="modal" data-target="#myModal">组长申请</a></li>{% endblock %}
+{% block css %}<link href="{% static 'css/list+edit.css' %}" rel="stylesheet"/>{% endblock %}
+{% block content %}
+{% if request.session.is_login %} 
+{% if request.session.is_group %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">第{{request.session.group}}组待标记文本列表（一共有{{ txts|length }}个文本）</div>
+                    <div class="panel-body">
+                        {% for txt in txts %}
+                            <div>
+                                <h3><a href="txt/{{txt.id}}">{{txt.title}}</a></h3>
+                                <p>{{ txt.content|truncatechars:30 }}</p>
+                            </div>
+                        {% empty %}
+                            <div>
+                                <h3>-- 暂无待标记文本，敬请期待 --</h3>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">我的标记</div>
+                    <div class="panel-body">
+                        {% for my_txt in my_txts %}
+                            <div>
+                                <h5><a href="txt/{{my_txt.id}}/edit">{{my_txt.title}}</a></h5>
+                            </div>
+                        {% empty %}
+                            <div>
+                                <p>-- 暂无标记文本 --</p>
+                            </div>
+                            
+                        {% endfor %}
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">组长申请</h4>
+                </div>
+                    <div class="modal-body">
+                        申请为该组组长？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <a href="http://localhost:8000/mark/txtlist"><button class="btn btn-primary" onclick="success()">确定</button></a>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        var username='{{request.session.user_name}}';
+        var group='{{request.session.group}}';
+        function success(){
+        $.ajax({
+            type:"POST",
+            url:"http://localhost:8000/account/head/",
+            data:JSON.stringify({
+                username:username,
+                bool:1,
+                group:group,
+            })
+        })
+        alert("申请成功")
+    }</script>
+
+{% else %}
+    <div class="container">
+        <h2 id="h2">请选择加入的小组</h2>
+        <p><a href="/mark/txtlist" class="btn btn-primary btn-lg active" role="button" onclick="join(1)">加入第一组</a></button></p>
+        <p><a href="/mark/txtlist" class="btn btn-primary btn-lg active" role="button" onclick="join(2)">加入第二组</a></button></p>
+        <p><a href="/mark/txtlist" class="btn btn-primary btn-lg active" role="button" onclick="join(3)">加入第三组</a></button></p>
+<script>
+    var username='{{request.session.user_name}}'
+    function join(x){
+        $.ajax({
+            type:"POST",
+            url:"http://localhost:8000/account/join/",
+            data:JSON.stringify({
+                group:x,
+                username:username,
+            })
+        })
+        alert("加入第"+x+"组成功")
+    }
+
+</script>
+{% endif %}
+
+{% else %}
+<div class="container">
+    <h1>请先登录</h1>
+</div>
+
+{% endif %}
+
+{% endblock %}

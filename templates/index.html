@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}主页{% endblock %}
+{% block css %}<link href="{% static 'css/index.css' %}" rel="stylesheet"/>{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="content">在线事件标记工具</div>
+        <div class="group">组员：匡龙 刘畅 刘世琦</div>
+        <div class="class">班级：电信1705</div>
+    </div>    
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}我的标注{% endblock %}
+{% block css %}
+<link href="{% static 'css/list+edit.css' %}" rel="stylesheet"/>
+<link href="{% static 'css/txt.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    <div class="container">
+        <h1>{{txt_obj.title}}</h1>
+    </div>
+    <div>
+        <form action="http://localhost:8000/mark/txt/edit" method="POST">
+        <table class="table table-striped">
+            <caption><h3>标注详情</h3></caption>
+            <thead>
+            <tr>
+            <th></th>
+            <th>组员</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td><input type="checkbox" value="{{ user }}" name="check_box_list"></td>
+                    <td>{{user}}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td></td>
+                    <td>暂无标注</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="查看" class="btn btn-primary btn-lg inputbutton"/>
+    </form>
+    </div>
+</div>
+{% endblock %}

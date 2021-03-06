@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}在线标注{% endblock %}
+{% block css %}<link href="{% static 'css/txt.css' %}" rel="stylesheet"/>{% endblock %}
+{% block content %}
+{% if request.session.is_login %}
+    <div class="container">
+        <div class="text" id="txt">
+            <br><br>
+            <h1>{{txt_obj.title}}</h1>
+                <hr>
+            <h2>{{txt_obj.content}}</h2>         
+        </div>
+            <br>
+        
+        <div class="thebutton">        
+            <div>
+                <ul id="nav">
+                    <li class="active">会见会谈</li>
+                    <li>签署文件</li>
+                    <li>设施启用</li>
+                    <li>举行活动</li>
+                </ul>
+                <ul id="content">
+                    <li style="display: block">
+                        <input type="button" value="触发词" onclick="replace(0)" class="inputbutton">
+                        <input type="button"   id="h1"  value="参与方1" onclick="replace(1)" class="inputbutton">
+                        <input type="button"   id="h2"  value="参与方2" onclick="replace(2)" class="inputbutton">
+                        <input type="button"   id="h3"  value="时间"    onclick="replace(3)" class="inputbutton">
+                        <input type="button"   id="h4"  value="地点"    onclick="replace(4)" class="inputbutton">
+                    </li>
+                    <li>
+                        <input type="button" value="触发词" onclick="replace(0)" class="inputbutton">
+                        <input type="button"   id="h5"  value="签署方"   onclick="replace(5)" class="inputbutton">
+                        <input type="button"   id="h6"  value="文件"     onclick="replace(6)" class="inputbutton">
+                        <input type="button"   id="h7"  value="签署时间"  onclick="replace(7)" class="inputbutton">
+                        <input type="button"   id="h8"  value="签署地点"  onclick="replace(8)" class="inputbutton">
+                    </li>
+                    <li>
+                        <input type="button" value="触发词" onclick="replace(0)" class="inputbutton">
+                        <input type="button"   id="h9"  value="设施修建方" onclick="replace(9)" class="inputbutton">
+                        <input type="button"   id="h10"  value="设施名称"   onclick="replace(10)" class="inputbutton">
+                        <input type="button"   id="h11"  value="启用时间"   onclick="replace(11)" class="inputbutton">
+                        <input type="button"   id="h12"  value="设施地点"   onclick="replace(12)" class="inputbutton">
+                    </li>
+                    <li>
+                        <input type="button" value="触发词" onclick="replace(0)" class="inputbutton">
+                        <input type="button"   id="h13"  value="举办方"     onclick="replace(13)" class="inputbutton">
+                        <input type="button"   id="h14"  value="活动名称"   onclick="replace(14)" class="inputbutton">
+                        <input type="button"   id="h15"  value="活动地点"   onclick="replace(15)" class="inputbutton">
+                        <input type="button"   id="h16"  value="活动时间"   onclick="replace(16)" class="inputbutton">
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <a href="/mark/txt/{{txt_obj.id}}/"><button class="btn btn-primary btn-lg inputbutton">重置</button></a>
+                <button class="btn btn-primary btn-lg inputbutton" data-toggle="modal" data-target="#myModal">预览</button>
+                {% if request.session.is_headman %}
+                <button class="btn btn-primary btn-lg inputbutton" data-toggle="modal" data-target="#Modal">最终标注</button>
+                {% else %}
+                {% endif %}
+                <input type="button"  value="下载" onclick="download()" class="inputbutton">
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel1">提示</h4>
+                </div>
+                <div class="modal-body">
+                    确定为最终标注?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="zuizhong(0)">关闭</button>
+                    <a href="/mark/txt/{{txt_obj.id}}/"><button class="btn btn-primary" onclick="refer(1)">确定</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">标记结果预览</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <caption>{{txt_obj.title}}</caption>
+                        <thead>
+                            <tr>
+                                <th>type</th>
+                                <th>context</th>
+                                <th>start</th>
+                                <th>end</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gkd">
+                        </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="refer(0)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="container">
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    </div>
+{% endif %}
+
+<!-- 选项卡 -->
+<script type="text/javascript">
+    var nav =document.getElementById("nav");
+    var navlist = nav.children;
+    var con = document.getElementById("content");
+    var conlist = con.children;
+    for (var i= 0;i<navlist.length;i++){
+        navlist[i].index = i;
+        navlist[i].onclick = function (){
+            for (var m = 0;m< conlist.length;m++){
+                navlist[m].className = "";
+                conlist[m].style.display ="none";
+                }
+            this.className = "active";
+            conlist[this.index].style.display = "block";
+        }
+    }
+</script>
+
+<!-- 获取标注内容 -->
+<script>
+    var user='{{request.session.user_name}}';
+    var title='{{txt_obj.title}}';
+    var user_group='{{request.session.group}}';
+    var times=0;
+    var zuizhong=0;
+    var start=new Array()
+    start[0]=0;
+    var end=new Array()
+    end[0]=0;
+    var type=new Array();
+    type[0]="无";
+    var context=new Array()
+    context[0]="无";
+    function replace(x){
+        times=times+1;
+        var replaceSelectedStrByEle = function(className){
+            var selecter = window.getSelection();
+            var selectStr = selecter.toString();
+            if(x!=0){
+                type[times]=document.getElementById("h"+x).value;
+                context[times]=selectStr;
+                start[times]=selecter.anchorOffset+end[times-1]+1;
+                end[times]=selecter.focusOffset+end[times-1];
+            }
+            else if(x==0){
+                type[times]="触发词";
+                context[times]=selectStr;
+                start[times]=selecter.anchorOffset+end[times-1]+1;
+                end[times]=selecter.focusOffset+end[times-1];
+                a=times;
+            }
+            if (selectStr.trim != "") {
+                var rang = selecter.getRangeAt(0);
+                var ele = document.createElement("i");
+                ele.className = className;
+                ele.textContent = selectStr;
+                rang.surroundContents(ele); 
+            }
+        }
+        if(times==1){
+            replaceSelectedStrByEle('red')
+        }else if(times==2){
+            replaceSelectedStrByEle('yellow')
+        }else if(times==3){
+            replaceSelectedStrByEle('blue')
+        }else if(times==4){
+            replaceSelectedStrByEle('green')
+        }else if(times==5){
+            replaceSelectedStrByEle('moccasin')
+        }
+        var table="";
+        for(var i=1;i<end.length;i++){
+            table+="<tr><td>"+type[i]+"</td><td>"+context[i]+"</td><td>"
+                    +start[i]+"</td><td>"+end[i]+"</td></tr>";
+        }
+        table+="</table>";
+        document.getElementById("gkd").innerHTML =table;
+    }
+    function zuizhong(x){
+        zuizhong=x
+    }
+    function refer(x){
+        for(var i=1;i<6;i++){
+            $.ajax({
+                type:"POST",
+                url:"http://localhost:8000/mark/refer/",
+                data:JSON.stringify({
+                    marktxt_type:type[i],
+                    start:start[i],
+                    end:end[i],
+                    text:context[i],
+                    user:user,
+                    user_group:user_group,
+                    txt:title,
+                    zuizhong:x,
+                }),
+            })
+        }
+        alert("提交成功")
+    }
+    function download(){
+        var xml='<?xml version="1.0" encoding="utf-8">'+'\n'+
+                '<Doocument ID="'+title+'">'+'\n'+'\0'+'\0'+'\0'+
+                '<event_trigger START="'+start[a]+'" END="'+end[a]+'">'+context[a]+'</event_trigger>'+'\n';
+        for(var t=1;t<6;t++){
+            if(t==a){
+                xml=xml;
+            }
+            else{
+                xml=xml+'\0'+'\0'+'\0'+'<event_argument START="'+start[t]+'" END="'+end[t]+'" ROLE="'+type[t]+'">'+context[t]+'</event_argument>'+'\n';
+            }
+        }
+        xml=xml+'</Doocument>';
+        content=xml;
+
+        $.ajax(
+            {
+                type:"POST",
+                url:"http://localhost:8000/mark/download/",
+                data:JSON.stringify({
+                    content:content,
+                }),
+            }
+        )
+        alert("下载成功")
+    }
+    </script>
+    
+{% endblock %}

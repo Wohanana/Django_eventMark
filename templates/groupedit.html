@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}我的标注{% endblock %}
+{% block css %}
+<link href="{% static 'css/list+edit.css' %}" rel="stylesheet"/>
+<link href="{% static 'css/txt.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    <h1>{{txt_obj.title}}</h1>
+        <hr>
+    <h2 id="h2">{{txt_obj.content}}</h2>
+    <div>
+        <table class="table table-striped">
+            <caption>
+                <input type="button"  value="查看标注" onclick="fun()" class="inputbutton">
+                <input type="button"  value="收起" onclick="nofun()" class="inputbutton">
+                <button class="btn btn-primary btn-lg inputbutton" data-toggle="modal" data-target="#Modal">编辑</button>
+                <input type="button"  value="下载" onclick="download()" class="inputbutton">
+            </caption>
+            <thead>
+            <tr>
+            <th>type</th>
+            <th>context</th>
+            <th>start</th>
+            <th>end</th>
+            </tr>
+            </thead>
+            <tbody id="wo">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">提示</h4>
+            </div>
+            <div class="modal-body">
+                你要对该文本标注进行编辑吗?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <a href="/mark/txt/{{txt_obj.id}}/"><button class="btn btn-primary">确定</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var type={{ types|safe }};
+    var context={{context|safe}};
+    var start={{start|safe}};
+    var end={{end|safe}};
+    var user={{my_user|safe}};
+    var length=user.length
+    var title='{{txt_obj.title}}';
+    function fun(){
+        var table="";
+        for(var j=0;j<length;j++){
+        table+="<tr><h2>"+user[j]+"</h2></tr>";
+            for(var i=0;i<5;i++){
+                table+="<tr><td>"+type[j][i]+"</td><td>"+context[j][i]+"</td><td>"+
+                        start[j][i]+"</td><td>"+end[j][i]+"</td></tr>"
+            }
+        }
+        table+="</table>";
+        document.getElementById("wo").innerHTML = table;
+    }
+    function nofun(){
+        document.getElementById("wo").innerHTML = '';
+    }
+    function download(){
+        for(var i=0;i<5;i++){
+            if(type[i]=='触发词'){
+                a=i;
+            }
+            else{
+
+            }
+        }
+        var xml='<?xml version="1.0" encoding="utf-8">'+'\n'+
+                '<Doocument ID="'+title+'">'+'\n'+'\0'+'\0'+'\0'+
+                '<event_trigger START="'+start[a]+'" END="'+end[a]+'">'+context[a]+'</event_trigger>'+'\n';
+        for(var t=0;t<5;t++){
+            if(t==a){
+                xml=xml;
+            }
+            else{
+                xml=xml+'\0'+'\0'+'\0'+'<event_argument START="'+start[t]+'" END="'+end[t]+'" ROLE="'+type[t]+'">'+context[t]+'</event_argument>'+'\n';
+            }
+        }
+        xml=xml+'</Doocument>';
+        content=xml;
+
+        $.ajax(
+            {
+                type:"POST",
+                url:"http://localhost:8000/mark/download/",
+                data:JSON.stringify({
+                    content:content,
+                }),
+            }
+        )
+        alert("下载成功")
+    }
+</script>
+{% endblock %}

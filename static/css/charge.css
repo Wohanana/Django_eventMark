@@ -1,0 +1,71 @@
+input[type=text] {
+    width: 340px;
+    padding: 0 25px;
+    height: 48px;
+    border: 1px solid #f2f2f2;
+    background: #f6f6f6;
+    color: #202124;
+    font-size: 14px;
+    line-height: 48px;
+    border-radius: 25px;
+}
+input[type=text]:focus { 
+    outline: none;
+    border-color: #2ca63b;
+    background-color: #fff;
+ }
+input[type=text]::selection{
+    background:transparent;
+    background-color: #fff;
+}
+input[type=text]::-moz-selection{
+    background:transparent;
+    background-color: #fff;
+}
+input[type=text]::-webkit-input-placeholder { /* WebKit browsers */
+    color: #bababa;
+}
+input[type=text]:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #bababa;
+}
+input[type=text]::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #bababa;
+}
+input[type=text]:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #bababa;
+}
+.editor-title {
+    display: inline-block;
+    width: 70px;
+    text-align: right;
+    font-size: 1em;
+    margin-right: 10px;
+    cursor: default;
+    min-width: 70px;
+}
+
+textarea {
+    vertical-align: top;
+    width: 480px;
+    height: 200px;
+    min-width: 480px;
+    border: 1px solid #f2f2f2;
+    background: #f6f6f6;
+    color: #202124;
+    font-size: 14px;
+    line-height: 48px;
+    border-radius: 25px;
+}
+textarea:focus { 
+    outline: none;
+    border-color: #2ca63b;
+    background-color: #fff;
+ }
+textarea::selection{
+    background:transparent;
+    background-color: #fff;
+}
+textarea::-moz-selection{
+    background:transparent;
+    background-color: #fff;
+}

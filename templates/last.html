@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}提示{% endblock %}
+{% block css %}<link href="{% static 'css/charge.css' %}" rel="stylesheet"/>{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>暂无最终标注，请点击<a href="http://localhost:8000/mark/chargeman/0">返回</a></h1>
+</div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load extras %}
+{% load staticfiles %}
+{% block title %}管理员界面{% endblock %}
+{% block content %}
+{% if request.session.is_login %}  
+{% if request.session.is_superuser %}
+<div class="container">
+<table class="table table-striped">
+    <caption><h2>文本总览</h2></caption>
+    <thead>
+        <tr>
+            <th></th>
+            <th>文件名</th>
+            <th>一致性</th>
+            <th>已标注人数</th>
+            <th>是否存在最终标注（0/1）</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tbody">
+        {% for txt in txts %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td><a href="http://localhost:8000/mark/mark_detail/{{txt.id}}"><button class="btn btn btn-link btn-xs">{{txt.title}}</button></a></td>
+            <td>{{a|index:forloop.counter0}}</td>
+            <td>{{n|index:forloop.counter0}}</td>
+            <td>{{yizhi|index:forloop.counter0}}</td>
+            <td><a href="http://localhost:8000/mark/{{yizhi|index:forloop.counter0}}/{{txt.id}}">查看</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<table class="table table-striped">
+    <caption><h2>用户信息</h2></caption>
+    <thead>
+        <tr>
+            <th></th>
+            <th>用户名</th>
+            <th>是否入组（T/F）</th>
+            <th>是否是组长（T/F）</th>
+        </tr>
+    </thead>
+    <tbody id="tbody">
+        {% for user in users %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{user}}</td>
+            <td>{{user.is_group}}</td>
+            <td>{{user.is_headman}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<table class="table table-striped">
+    <caption><h2>组长申请</h2></caption>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>组号</th>
+            <th>用户名</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tbody">
+        {% for head in heads %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{head.group}}</td>
+            <td>{{head.username}}</td>
+            <td><a href="http://localhost:8000/mark/admin"><button class="btn btn btn-link btn-xs" onclick="success()">确认为组长</button></a></td>
+
+        </tr>
+        <script>
+            var username="{{head.username}}";
+            function success(){
+                $.ajax({
+                    type:"POST",
+                    url:"http://localhost:8000/account/head_confirm/",
+                    data:JSON.stringify({
+                        username:username,
+                    })
+                })
+            }
+    </script>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="container">
+    <h1>你不是管理员，无法查看</h1>
+</div>
+{% endif %}
+{% else %}
+<div class="container">
+    <h1>请先登录</h1>
+</div>
+{% endif%}
+{% endblock %}

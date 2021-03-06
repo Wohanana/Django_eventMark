@@ -1,0 +1,78 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.inputbutton{
+    width: 196px;  
+    padding:8px;  
+    background-color: #428bca;  
+    border-color: #357ebd;  
+    color: #fff;  
+    -moz-border-radius: 10px;  
+    -webkit-border-radius: 10px;  
+    border-radius: 10px; /* future proofing */  
+    -khtml-border-radius: 10px; /* for old Konqueror browsers */  
+    text-align: center;  
+    vertical-align: middle;  
+    border: 1px solid transparent;  
+    font-weight: 900;  
+    font-size:125%
+}
+.inputbutton:hover{
+    background-color: #442288;
+    border-color: #442288;
+}
+.text{
+    text-align: center;  
+}
+.red{
+    background-color: red;
+    border-radius: 5px;
+    box-shadow: 0 0 10px red;
+    font-style: normal;
+}
+.blue{
+    background-color:blue;
+    border-radius: 5px;
+    box-shadow: 0 0 10px blue;
+    font-style: normal;
+}
+.green{
+    background-color:green;
+    border-radius: 5px;
+    box-shadow: 0 0 10px green;
+    font-style: normal;
+}
+.yellow{
+    background-color:yellow;
+    border-radius: 5px;
+    box-shadow: 0 0 10px yellow;
+    font-style: normal;
+}    
+.moccasin{
+    background-color:moccasin;
+    border-radius: 5px;
+    box-shadow: 0 0 10px moccasin;
+    font-style: normal;
+}
+.thebutton{
+    margin: 30px;
+}
+ul{
+        list-style: none;overflow: hidden;
+    }
+#nav{
+        width: 400px;height: 40px;text-align: center;line-height: 40px;
+        background: #c5c5c5;
+    }
+#nav li{
+        width: 25%;height: 40px;float: left;border: 1px solid #c5c5c5;
+        border-bottom: none;
+    }
+#nav li.active{
+        background: #fff;
+    }
+#content{
+        width: 100%;height: 60px;position: relative;border: 1px solid #c5c5c5;border-top: none;
+    }
+#content li{width: 100%;height: 100%;position: absolute;padding: 10px;display: none}

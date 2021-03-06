@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load extras %}
+{% load staticfiles %}
+{% block title %}组长界面{% endblock %}
+{% block css %}<link href="{% static 'css/charge.css' %}" rel="stylesheet"/>{% endblock %}
+{% block content %}
+{% if request.session.is_login %}  
+{% if request.session.is_headman %}
+<div class="container">
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">上传文件</button>
+    <table class="table table-striped">
+        <caption><h2>我的小组</h2></caption>
+        <thead>
+            <tr>
+                <th></th>
+                <th>文件名</th>
+                <th>一致性</th>
+                <th>已标注人数</th>
+                <th>是否存在最终标注（0/1）</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {% for txt in group_txts %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td><a href="http://localhost:8000/mark/mark_detail/{{txt.id}}"><button class="btn btn btn-link btn-xs">{{txt.title}}</button></a></td>
+                <td>{{a|index:forloop.counter0}}</td>
+                <td>{{n|index:forloop.counter0}}</td>
+                <td>{{yizhi|index:forloop.counter0}}</td>
+                <td><a href="http://localhost:8000/mark/{{yizhi|index:forloop.counter0}}/{{txt.id}}">查看</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="text" id="k_value" placeholder="请输入小于1的k值"/>
+    <button class="btn btn-primary btn-lg" type="button"  onclick="deleterow()">筛选</button>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">文件上传</h4>
+            </div>
+            <form action="http://localhost:8000/mark/upload/" method="POST">
+                <div class="modal-body">
+                    组号：<input name="group" type="text" maxlength="2"><br><br>
+                    标题：<input name="title" type="text" maxlength="50"><br><br>
+                    <div class="text-box">
+                        <lable class="edi">内容：</lable>
+                        <textarea name="content"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="success()" >提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var a={{a}};
+    var k={{k}};
+    var length=a.length;
+    function success(){
+        alert("上传成功")
+    }
+    function deleterow(){
+        var k=document.getElementById("k_value").value;
+        var a={{a}};
+        var del_a=new Array();
+        var length=a.length;
+        for(var i=0;i<length;i++){
+            if(a[i]<k){
+                del_a.push(i);
+            }
+        }
+        for(var j=0;j<del_a.length;j++){
+            del_a[j]=del_a[j]-j;
+        }
+        for(var n=0;n<del_a.length;n++){
+            document.getElementById("tbody").deleteRow(del_a[n]);
+        }
+    }
+</script>
+{% else %}
+<div class="container">
+    <h1>你不是组长，无法查看</h1>
+</div>
+{% endif %}
+{% else %}
+<div class="container">
+    <h1>请先登录</h1>
+</div>
+{% endif%}
+{% endblock %}
